@@ -11,10 +11,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const logoUploadBtn = document.getElementById('logoUploadBtn');
     const logoPreview = document.getElementById('logoPreview');
     const removeLogoBtn = document.getElementById('removeLogoBtn');
+    const serverUrl = 'https://qr-code-generator-backend.onrender.com';
     
     let selectedStyle = 'standard';
     let logoData = null;
-    
     // Style selection
     const styleOptions = document.querySelectorAll('.qr-style-option');
     styleOptions.forEach(option => {
@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     requestData.logo = logoData;
                 }
                 
-                const response = await fetch('http://localhost:5000/generate-qr', {
+                const response = await fetch(serverUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         e.preventDefault();
                         
                         try {
-                            const response = await fetch('http://localhost:5000/download-qr', {
+                            const response = await fetch(serverUrl+'download-qr', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             // Add format parameter for SVG
                             const svgRequestData = {...requestData, format: 'svg'};
                             
-                            const response = await fetch('http://localhost:5000/download-qr', {
+                            const response = await fetch(serverUrl+'/download-qr', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
