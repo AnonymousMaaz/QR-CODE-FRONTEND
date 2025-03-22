@@ -245,6 +245,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(downloadForm);
         downloadForm.submit();
         document.body.removeChild(downloadForm);
+        return false;
     }
                     };
                     
@@ -272,32 +273,25 @@ document.addEventListener('DOMContentLoaded', function() {
         if (logoData) {
             requestData.logo = logoData;
         }
+        // Create a form to submit directly to download endpoint
+        const downloadForm = document.createElement('form');
+        downloadForm.method = 'POST';
+        downloadForm.action = `${serverUrl}/download-qr`;
+        downloadForm.target = '_blank';
         
-        // Direct download using fetch and blob handling
-        fetch(`${serverUrl}/download-qr`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(requestData)
-        })
-        .then(response => response.blob())
-        .then(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            a.download = 'beautiful_qrcode.svg';
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-        })
-        .catch(error => {
-            console.error('Error downloading SVG QR code:', error);
-            errorMessage.textContent = 'Error downloading SVG. Please try again or use PNG format.';
-            errorMessage.style.display = 'block';
-        });
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'requestData';
+        input.value = JSON.stringify(requestData);
+        
+        downloadForm.appendChild(input);
+        document.body.appendChild(downloadForm);
+        downloadForm.submit();
+        document.body.removeChild(downloadForm);
+        
+        return false; // Add this line to prevent the href from being followed
+    }
+      
     }
                     };
                     
