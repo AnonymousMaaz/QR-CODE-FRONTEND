@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     qrCodeImg.src = result.image;
                     
                     // Set up download event for PNG
-                    downloadLink.onclick = function(e) {
+                   downloadLink.onclick = function(e) {
     if (!useExternalApiCheckbox.checked) {
         e.preventDefault();
         
@@ -230,27 +230,39 @@ document.addEventListener('DOMContentLoaded', function() {
             requestData.logo = logoData;
         }
         
-        // Create a form to submit directly to download endpoint
-        const downloadForm = document.createElement('form');
-        downloadForm.method = 'POST';
-        downloadForm.action = `${serverUrl}/download-qr`;
-        downloadForm.target = '_blank';
+        // Use fetch to get the file and create a download
+        fetch(`${serverUrl}/download-qr`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'beautiful_qrcode.png';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        })
+        .catch(error => {
+            console.error('Download error:', error);
+            errorMessage.textContent = 'Error downloading QR code. Please try again.';
+            errorMessage.style.display = 'block';
+        });
         
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'requestData';
-        input.value = JSON.stringify(requestData);
-        
-        downloadForm.appendChild(input);
-        document.body.appendChild(downloadForm);
-        downloadForm.submit();
-        document.body.removeChild(downloadForm);
         return false;
     }
-                    };
+};
                     
                     // Set up download event for SVG (if supported by server)
-                    downloadSvgLink.onclick = function(e) {
+                   // For SVG download
+downloadSvgLink.onclick = function(e) {
     if (!useExternalApiCheckbox.checked) {
         e.preventDefault();
         
@@ -273,27 +285,36 @@ document.addEventListener('DOMContentLoaded', function() {
         if (logoData) {
             requestData.logo = logoData;
         }
-        // Create a form to submit directly to download endpoint
-        const downloadForm = document.createElement('form');
-        downloadForm.method = 'POST';
-        downloadForm.action = `${serverUrl}/download-qr`;
-        downloadForm.target = '_blank';
         
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'requestData';
-        input.value = JSON.stringify(requestData);
+        // Use fetch to get the file and create a download
+        fetch(`${serverUrl}/download-qr`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData)
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'beautiful_qrcode.svg';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        })
+        .catch(error => {
+            console.error('Download error:', error);
+            errorMessage.textContent = 'Error downloading QR code. Please try again.';
+            errorMessage.style.display = 'block';
+        });
         
-        downloadForm.appendChild(input);
-        document.body.appendChild(downloadForm);
-        downloadForm.submit();
-        document.body.removeChild(downloadForm);
-        
-        return false; // Add this line to prevent the href from being followed
+        return false;
     }
-      
-    }
-                    };
+};
                     
                     // Hide loader and show result
                     loader.style.display = 'none';
