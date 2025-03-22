@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const logoUploadBtn = document.getElementById('logoUploadBtn');
     const logoPreview = document.getElementById('logoPreview');
     const removeLogoBtn = document.getElementById('removeLogoBtn');
-    const serverUrl = 'https://qr-code-generator-backend.onrender.com';
+    const serverUrl = 'https://qr-code-generator-backend-fxyn.onrender.com';
     
     let selectedStyle = 'standard';
     let logoData = null;
