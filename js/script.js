@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Test if the server is running
     const testServerConnection = async () => {
         try {
-            const response = await fetch('http://localhost:5000/', {
+            const response = await fetch(serverUrl, {
                 method: 'GET',
                 mode: 'cors',
                 headers: {
@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         e.preventDefault();
                         
                         try {
-                            const response = await fetch(serverUrl+'download-qr', {
+                            const response = await fetch(`${serverUrl}/download-qr`, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             // Add format parameter for SVG
                             const svgRequestData = {...requestData, format: 'svg'};
                             
-                            const response = await fetch(serverUrl+'/download-qr', {
+                            const response = await fetch(`${serverUrl}/download-qr`, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
